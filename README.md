@@ -1,4 +1,4 @@
-![Build WAM](https://github.com/gschiano/wasmworkshop/workflows/Build%20WAM/badge.svg)
+![Build WAM](https://github.com/gschian0/wasmworkshop/workflows/Build%20WAM/badge.svg)
 
 Try this example online: https://github.com/gschian0/wasmworkshop
 
