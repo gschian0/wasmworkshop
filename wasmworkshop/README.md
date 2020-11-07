@@ -1,0 +1,2 @@
+# wasmworkshop readme
+Synthesiser Template
