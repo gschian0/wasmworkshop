@@ -38,7 +38,7 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     
     pGraphics->LoadFont("Roboto-Regular", ROBOTO_FN);
     pGraphics->LoadFont("Logo", LOGO_FONT_FN);
-//    auto knobSVG = pGraphics->LoadSVG(BEFACO_TINYKNOB_FN); /* TASK_02 */
+    auto knobSVG = pGraphics->LoadSVG(BEFACO_TINYKNOB_FN); /* TASK_02 */
     auto sliderPotSVG = pGraphics->LoadSVG(BEFACO_SLIDEPOT_FN);
     auto sliderHandleSVG = pGraphics->LoadSVG(BEFACO_SLIDEPOTHANDLE_FN);
 
@@ -61,7 +61,7 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     
     // Background control, either a fixed color, gradient, svg or bitmap
    // pGraphics->AttachPanelBackground(COLOR_LIGHT_GRAY); /* TASK_01 */
-    pGraphics->AttachPanelBackground(IPattern::CreateLinearGradient(bounds, EDirection::Horizontal, {{COLOR_VIOLET, 0.}, {COLOR_INDIGO, 1.}}));
+    pGraphics->AttachPanelBackground(IPattern::CreateLinearGradient(bounds, EDirection::Vertical, {{COLOR_VIOLET, 0.}, {COLOR_INDIGO, 1.}}));
      
     // Group controls (background labels)
     pGraphics->AttachControl(new IVGroupControl(controlsArea, " ", 0.f));
@@ -95,7 +95,9 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
 
     /* TASK_03 -- insert some code here! */
     
-//    pGraphics->AttachControl(new ISVGKnobControl(masterArea.GetCentredInside(100), knobSVG, kParamGain)); /* TASK_02 */
+    pGraphics->AttachControl(new ITextControl(masterArea.GetCentredInside(100).GetTranslated(0,-100).GetFromBottom(20.f), "Volume"));
+    pGraphics->AttachControl(new ISVGKnobControl(masterArea.GetCentredInside(75), knobSVG, kParamGain)); /* TASK_02 */
+    pGraphics->AttachControl(new ICaptionControl(masterArea.GetCentredInside(100).GetTranslated(0,100).GetFromTop(20.f), kParamGain));
     
     // Keyboard
     pGraphics->AttachControl(new IVKeyboardControl(keyboardArea, 36, 64), kCtrlTagKeyboard);
@@ -113,14 +115,16 @@ void wasmworkshop::ProcessBlock(sample** inputs, sample** outputs, int nFrames)
   mSynth.ProcessBlock(inputs, outputs, 0, 1, nFrames);
 
   /* TASK_02 */
-  /*
-  const double gain = GetParam(kParamGain)->Value() / 100.; // TASK_04
+  
+  //const double gain = GetParam(kParamGain)->Value() / 100.; // TASK_04
+  const double gain = GetParam(kParamGain)->DBToAmp() / 100.;
+  
  
   for (int s = 0; s < nFrames; s++)
   {
     outputs[0][s] *= gain;
   }
-  */
+  
 
   // copy left hand channel audio to right hand channel
   memcpy(outputs[1], outputs[0], nFrames * sizeof(sample));
