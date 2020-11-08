@@ -41,9 +41,11 @@ public:
     for (auto s = startIdx; s < startIdx + nFrames; s++)
     {
       // generate 1 samples worth of audio
-      sample y = mEnv.Process(mSustainLevel) * mOsc.Process(midi2CPS(mBasePitch + pitchBend));
+      //sample y = mEnv.Process(mSustainLevel) * mOsc.Process(midi2CPS(mBasePitch + pitchBend));
 
-      //sample y = mEnv.Process(mSustainLevel) * mSawToothOsc.Process(midi2CPS(mBasePitch + pitchBend), 44100.f);
+      sample y = mEnv.Process(mSustainLevel) * mSawToothOsc.Process(midi2CPS(mBasePitch + pitchBend), 44100.f);
+
+      y = mFilter.Process(y);
       
       outputs[0][s] = outputs[0][s] + y; // accumulate the output of this voice into the
     }

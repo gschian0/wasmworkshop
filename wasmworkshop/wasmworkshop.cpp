@@ -14,6 +14,9 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
   GetParam(kParamAmpSustain)->InitDouble("Sustain", 50., 0., 100., 1, "%", IParam::kFlagsNone, "ADSR");
   GetParam(kParamAmpRelease)->InitDouble("Release", 10., 2., 1000., 0.1, "ms", IParam::kFlagsNone, "ADSR");
 
+  GetParam(kParamFilterCutoff)->InitFrequency("Filter Cutoff");
+  GetParam(kParamFilterResonance)->InitPercentage("Filter Resonance");
+
 #if IPLUG_DSP
   for (int i = 0; i < kNumVoices; i++) {
     auto* newVoice = new MySynthVoice();
@@ -56,6 +59,7 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     const IRECT ampEGLabelsArea = ampEG.GetGridCell(0, 3, 1);
     const IRECT ampEGSlidersArea = ampEG.GetGridCell(1, 3, 1);
     const IRECT ampEGValuesArea = ampEG.GetGridCell(2, 3, 1);
+     const IRECT filterArea = column1.GetPadded(0, 0., 5., 0.).FracRectVertical(0.5, false);
     
     /* ADD CONTROLS */
     
@@ -68,6 +72,7 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     pGraphics->AttachControl(new IVGroupControl(column1.GetPadded(0, 0., 5., 0.), "OSCILLATORS"));
     pGraphics->AttachControl(new IVGroupControl(column2.GetPadded(5., 0., 5., 0.), "ENVELOPES"));
     pGraphics->AttachControl(new IVGroupControl(masterArea.GetPadded(5., 0., 0., 0.), "MASTER"));
+    pGraphics->AttachControl(new IVGroupControl(filterArea, "FILTER"));
     WDL_String versionStr, buildDateStr;
     GetPluginVersionStr(versionStr);
     buildDateStr.SetFormatted(100, "%s %s %s, built on %s at %.5s ", versionStr.Get(), GetArchStr(), GetAPIStr(), __DATE__, __TIME__);
@@ -90,6 +95,14 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     pGraphics->AttachControl(new ICaptionControl(ampEGValuesArea.GetGridCell(1, 1, 4).GetFromTop(20.f), kParamAmpDecay));
     pGraphics->AttachControl(new ICaptionControl(ampEGValuesArea.GetGridCell(2, 1, 4).GetFromTop(20.f), kParamAmpSustain));
     pGraphics->AttachControl(new ICaptionControl(ampEGValuesArea.GetGridCell(3, 1, 4).GetFromTop(20.f), kParamAmpRelease));
+
+    pGraphics->AttachControl(new ITextControl(filterArea.FracRectHorizontal(0.5, false).GetCentredInside(100).GetTranslated(0,-100).GetFromBottom(20.f), "Filter Cutoff"));
+    pGraphics->AttachControl(new ISVGKnobControl(filterArea.FracRectHorizontal(0.5, false).GetCentredInside(75), knobSVG, kParamFilterCutoff));
+    pGraphics->AttachControl(new ICaptionControl(filterArea.FracRectHorizontal(0.5, false).GetCentredInside(100).GetTranslated(0,100).GetFromTop(20.f), kParamFilterCutoff));
+    
+    pGraphics->AttachControl(new ITextControl(filterArea.FracRectHorizontal(0.5, true).GetCentredInside(100).GetTranslated(0,-100).GetFromBottom(20.f), "Filter Resoance"));
+    pGraphics->AttachControl(new ISVGKnobControl(filterArea.FracRectHorizontal(0.5, true).GetCentredInside(75), knobSVG, kParamFilterResonance));
+    pGraphics->AttachControl(new ICaptionControl(filterArea.FracRectHorizontal(0.5, true).GetCentredInside(100).GetTranslated(0,100).GetFromTop(20.f), kParamFilterResonance));
     
     // Master controls
 
@@ -102,7 +115,7 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     // Keyboard
     pGraphics->AttachControl(new IVKeyboardControl(keyboardArea, 36, 64), kCtrlTagKeyboard);
 
-    pGraphics->AttachControl(new IVLabelControl(logoArea, "wasmworkshop", DEFAULT_STYLE.WithDrawFrame(false).WithValueText(IText(50., "Logo"))));
+    pGraphics->AttachControl(new IVLabelControl(logoArea, "wasmworkshop", DEFAULT_STYLE.WithDrawFrame(false).WithValueText(IText(48., "Logo"))));
     
     pGraphics->SetQwertyMidiKeyHandlerFunc([pGraphics](const IMidiMsg& msg) { pGraphics->GetControlWithTag(kCtrlTagKeyboard)->As<IVKeyboardControl>()->SetNoteFromMidi(msg.NoteNumber(), msg.StatusMsg() == IMidiMsg::kNoteOn); });
   };
@@ -148,6 +161,8 @@ void wasmworkshop::OnParamChange(int paramIdx)
   case kParamAmpDecay:   for(auto* voice : mVoices) { voice->mEnv.SetStageTime(ADSREnvelope<sample>::EStage::kDecay,   value); } break;
   case kParamAmpSustain: for(auto* voice : mVoices) { voice->mSustainLevel = value / 100.0; } break;
   case kParamAmpRelease: for(auto* voice : mVoices) { voice->mEnv.SetStageTime(ADSREnvelope<sample>::EStage::kRelease, value); } break;
+  case kParamFilterCutoff: for(auto* voice : mVoices) { voice->mFilter.SetFreqCPS(value); } break;
+  case kParamFilterResonance: for(auto* voice : mVoices) { voice->mFilter.SetQ(value); } break;
   default:
     break;
   }

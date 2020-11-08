@@ -18,6 +18,8 @@ enum EParams
   kParamAmpDecay,
   kParamAmpSustain,
   kParamAmpRelease,
+  kParamFilterCutoff,
+  kParamFilterResonance,
 //  kParamFilterAttack,
 //  kParamFilterDecay,
 //  kParamFilterSustain,
