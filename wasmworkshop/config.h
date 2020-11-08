@@ -1,7 +1,7 @@
 #define PLUG_NAME "wasmworkshop"
 #define PLUG_MFR "WAVE_FUNCTION"
-#define PLUG_VERSION_HEX 0x00040100
-#define PLUG_VERSION_STR "4.1.0"
+#define PLUG_VERSION_HEX 0x00040200
+#define PLUG_VERSION_STR "4.2.0"
 #define PLUG_UNIQUE_ID 'BOdy'
 #define PLUG_MFR_ID 'Acme'
 #define PLUG_URL_STR "https://iplug2.github.io"
