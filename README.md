@@ -1,6 +1,6 @@
 ![Build WAM](https://github.com/gschian0/wasmworkshop/workflows/Build%20WAM/badge.svg)
 
-Try this example online: https://github.com/gschian0/wasmworkshop
+Try this example online: https://gschian0.github.io/wasmworkshop/
 
 This is an example of how to set up an iPlug2 project to build "out of source", which might be desirable to keep all your project dependencies synchronised with version control. It is also set up for "containerized development" using VSCode and github codespaces.
 
