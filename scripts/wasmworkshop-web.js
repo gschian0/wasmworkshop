@@ -978,9 +978,9 @@ function updateGlobalBufferAndViews(buf) {
   Module['HEAPF64'] = HEAPF64 = new Float64Array(buf);
 }
 
-var STACK_BASE = 5293040,
+var STACK_BASE = 5293168,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 50160;
+    STACK_MAX = 50288;
 
 var TOTAL_STACK = 5242880;
 
