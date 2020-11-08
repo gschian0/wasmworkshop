@@ -3,6 +3,9 @@
 #include "MidiSynth.h"
 #include "Oscillator.h"
 #include "ADSREnvelope.h"
+#include "SawtoothOscillator.h"
+#include "StateVariableFilter.h"
+
 
 inline double midi2CPS(double pitch)
 {
@@ -39,13 +42,17 @@ public:
     {
       // generate 1 samples worth of audio
       sample y = mEnv.Process(mSustainLevel) * mOsc.Process(midi2CPS(mBasePitch + pitchBend));
+
+      //sample y = mEnv.Process(mSustainLevel) * mSawToothOsc.Process(midi2CPS(mBasePitch + pitchBend), 44100.f);
       
       outputs[0][s] = outputs[0][s] + y; // accumulate the output of this voice into the
     }
   }
 
 public:
+  SawToothOscillator mSawToothOsc;
   FastSinOscillator<sample> mOsc;
   ADSREnvelope<sample> mEnv;
+  SVF<sample> mFilter;
   sample mSustainLevel = 0.;
 };
