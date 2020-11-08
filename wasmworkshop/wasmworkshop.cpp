@@ -60,8 +60,8 @@ wasmworkshop::wasmworkshop(const InstanceInfo& info)
     /* ADD CONTROLS */
     
     // Background control, either a fixed color, gradient, svg or bitmap
-    pGraphics->AttachPanelBackground(COLOR_LIGHT_GRAY); /* TASK_01 */
-//    pGraphics->AttachPanelBackground(IPattern::CreateLinearGradient(bounds, EDirection::Vertical, {{COLOR_LIGHT_GRAY, 0.}, {COLOR_DARK_GRAY, 1.}}));
+   // pGraphics->AttachPanelBackground(COLOR_LIGHT_GRAY); /* TASK_01 */
+    pGraphics->AttachPanelBackground(IPattern::CreateLinearGradient(bounds, EDirection::Horizontal, {{COLOR_VIOLET, 0.}, {COLOR_INDIGO, 1.}}));
      
     // Group controls (background labels)
     pGraphics->AttachControl(new IVGroupControl(controlsArea, " ", 0.f));
